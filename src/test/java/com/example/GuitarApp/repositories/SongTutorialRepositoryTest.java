@@ -42,10 +42,7 @@ class SongTutorialRepositoryTest {
         userRepository.save(user);
         songRepository.save(song);
 
-        songTutorial = new SongTutorial();
-        songTutorial.setDifficulty(TutorialDifficulty.SIMPLIFIED);
-        songTutorial.setDescription("A beginner's tutorial on Bohemian Rhapsody");
-        songTutorial.setCreatedAt(LocalDateTime.now());
+        songTutorial = TestDataFactory.getSongTutorial();
 
         songTutorial.setTutorialAuthor(user);
         songTutorial.setSong(song);

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "song_tutorials", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "song_id"}))
@@ -50,4 +52,7 @@ public class SongTutorial {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     private Song song;
+
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Comment> comments;
 }
