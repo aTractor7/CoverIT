@@ -39,4 +39,7 @@ public class Song {
 
     @ManyToMany(mappedBy = "songs", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<Artist> songAuthors;
+
+    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<SongTutorial> tutorials;
 }

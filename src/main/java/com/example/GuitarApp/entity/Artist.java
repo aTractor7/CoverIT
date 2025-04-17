@@ -34,8 +34,8 @@ public class Artist {
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "songs_authors",
-            joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     )
     private Set<Song> songs;
 }

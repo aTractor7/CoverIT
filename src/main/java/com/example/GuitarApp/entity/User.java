@@ -5,6 +5,7 @@ import com.example.GuitarApp.entity.enums.Skill;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -53,6 +55,7 @@ public class User {
     @Column(nullable = false, length = 30)
     private Role role = Role.USER;
 
+    @NotNull(message = "Skill cannot be null")
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Skill skill = Skill.BEGINNER;
@@ -62,4 +65,8 @@ public class User {
 
     @Size(max = 500, message = "Bio cannot be longer than 500 characters")
     private String bio;
+
+
+    @OneToMany(mappedBy = "tutorialAuthor", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<SongTutorial> tutorials;
 }

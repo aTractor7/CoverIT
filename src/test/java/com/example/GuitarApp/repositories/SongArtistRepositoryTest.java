@@ -2,16 +2,14 @@ package com.example.GuitarApp.repositories;
 
 import com.example.GuitarApp.entity.Artist;
 import com.example.GuitarApp.entity.Song;
-import com.example.GuitarApp.entity.enums.SongGenre;
+import com.example.GuitarApp.util.TestDataFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,29 +22,18 @@ class SongArtistRepositoryTest {
     @Autowired
     private ArtistRepository artistRepository;
 
+    private Song song;
+    private Artist artist;
+
+    @BeforeEach
+    public void setUp() {
+        song = TestDataFactory.getSongWithAuthor();
+        artist = song.getSongAuthors().stream().findFirst().get();
+    }
+
     @Test
     @DisplayName("Save artist with songs and verify ManyToMany relationship")
     void saveArtistWithSongs() {
-        // Create a new Song instance
-        Song song = new Song();
-        song.setTitle("Bohemian Rhapsody");
-        song.setGenre(SongGenre.ROCK);
-        song.setReleaseDate(LocalDate.of(1975, 11, 21));
-
-        // Create a new Artist instance
-        Artist artist = new Artist();
-        artist.setName("Queen");
-        artist.setBio("Legendary British rock band");
-
-        // Set bidirectional ManyToMany relationship
-        Set<Song> songs = new HashSet<>();
-        songs.add(song);
-        artist.setSongs(songs);
-
-        Set<Artist> authors = new HashSet<>();
-        authors.add(artist);
-        song.setSongAuthors(authors);
-
         // Save artist (cascades and saves the song as well)
         artistRepository.save(artist);
 
