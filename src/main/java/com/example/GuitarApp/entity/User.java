@@ -71,6 +71,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Comment> comments;
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<PersonalLibrary> library;
+
     @PrePersist
     protected void onCreate() {
         this.joinDate = LocalDate.now();

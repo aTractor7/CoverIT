@@ -8,6 +8,7 @@ import com.example.GuitarApp.entity.enums.TutorialDifficulty;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,5 +75,9 @@ public class TestDataFactory {
         comment3.setText("Could you explain the part with the strumming pattern in more detail?");
 
         return List.of(comment1, comment2, comment3);
+    }
+
+    public static PersonalLibrary getPersonalLibrary() {
+        return new PersonalLibrary();
     }
 }

@@ -12,7 +12,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "song_tutorials", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "song_id"}))
+@Table(name = "song_tutorials",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "song_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -51,8 +52,13 @@ public class SongTutorial {
     @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     private Song song;
 
-    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<PersonalLibrary> personalLibraries;
 
     @PrePersist
     protected void onCreate() {
