@@ -24,8 +24,8 @@ public class Fingering {
     @JoinColumn(name = "chord_id", referencedColumnName = "id", nullable = false)
     private Chord chord;
 
-    // Тимчасово nullable (TODO: зробити not null пізніше)
     @Lob
+    @Column(columnDefinition = "LONGBLOB", nullable = false)
     private byte[] img;
 
     @OneToMany(mappedBy = "recommendedFingering", fetch = FetchType.LAZY)
