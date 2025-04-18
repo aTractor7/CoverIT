@@ -56,9 +56,13 @@ public class SongTutorial {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<PersonalLibrary> personalLibraries;
+
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<SongBeat> songBeats;
 
     @PrePersist
     protected void onCreate() {

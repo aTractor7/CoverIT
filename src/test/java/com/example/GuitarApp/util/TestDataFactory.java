@@ -80,4 +80,28 @@ public class TestDataFactory {
     public static PersonalLibrary getPersonalLibrary() {
         return new PersonalLibrary();
     }
+
+    public static SongBeat getSongBeat() {
+        Chord chord = new Chord();
+        chord.setName("Am");
+
+        Fingering fingering = new Fingering();
+        fingering.setChord(chord);
+        fingering.setImg(new byte[]{1, 2, 3});
+
+        SongBeat songBeat = new SongBeat();
+        songBeat.setText("Beat 1");
+        songBeat.setBeat(1);
+
+        BeatChord beatChord = new BeatChord();
+        beatChord.setSongBeat(songBeat);
+        beatChord.setChord(chord);
+        beatChord.setRecommendedFingering(fingering);
+
+        songBeat.setBeatChords(Set.of(beatChord));
+        fingering.setRecommendedFor(Set.of(beatChord));
+        chord.setBeatChords(Set.of(beatChord));
+
+        return songBeat;
+    }
 }
