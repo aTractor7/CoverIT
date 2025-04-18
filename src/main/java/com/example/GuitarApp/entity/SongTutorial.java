@@ -4,13 +4,11 @@ import com.example.GuitarApp.entity.enums.TutorialDifficulty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -55,4 +53,21 @@ public class SongTutorial {
 
     @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Comment> comments;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SongTutorial that = (SongTutorial) o;
+        return id == that.id && difficulty == that.difficulty && Objects.equals(description, that.description) && Objects.deepEquals(backtrack, that.backtrack) && Objects.equals(createdAt, that.createdAt) && Objects.equals(recommendedStrumming, that.recommendedStrumming) && Objects.equals(tutorialAuthor, that.tutorialAuthor) && Objects.equals(song, that.song);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, difficulty, description, Arrays.hashCode(backtrack), createdAt, recommendedStrumming, tutorialAuthor, song);
+    }
 }

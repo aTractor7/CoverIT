@@ -7,13 +7,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -67,10 +65,26 @@ public class User {
     @Size(max = 500, message = "Bio cannot be longer than 500 characters")
     private String bio;
 
-
     @OneToMany(mappedBy = "tutorialAuthor", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<SongTutorial> tutorials;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Comment> comments;
+
+    @PrePersist
+    protected void onCreate() {
+        this.joinDate = LocalDate.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.deepEquals(profileImg, user.profileImg) && Objects.equals(joinDate, user.joinDate) && role == user.role && skill == user.skill && Objects.equals(instrument, user.instrument) && Objects.equals(bio, user.bio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, password, Arrays.hashCode(profileImg), joinDate, role, skill, instrument, bio);
+    }
 }

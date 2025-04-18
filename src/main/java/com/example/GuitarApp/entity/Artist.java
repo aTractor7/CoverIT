@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,4 +39,16 @@ public class Artist {
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     )
     private Set<Song> songs;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Artist artist = (Artist) o;
+        return id == artist.id && Objects.equals(name, artist.name) && Objects.equals(bio, artist.bio) && Objects.equals(songs, artist.songs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, bio, songs);
+    }
 }

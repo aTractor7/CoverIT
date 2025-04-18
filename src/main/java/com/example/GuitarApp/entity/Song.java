@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -42,4 +43,16 @@ public class Song {
 
     @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<SongTutorial> tutorials;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return id == song.id && Objects.equals(title, song.title) && genre == song.genre && Objects.equals(releaseDate, song.releaseDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, genre, releaseDate);
+    }
 }

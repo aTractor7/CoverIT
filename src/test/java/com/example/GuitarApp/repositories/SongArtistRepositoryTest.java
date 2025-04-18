@@ -29,14 +29,13 @@ class SongArtistRepositoryTest {
     public void setUp() {
         song = TestDataFactory.getSongWithAuthor();
         artist = song.getSongAuthors().stream().findFirst().get();
+
+        artistRepository.save(artist);
     }
 
     @Test
     @DisplayName("Save artist with songs and verify ManyToMany relationship")
     void saveArtistWithSongs() {
-        // Save artist (cascades and saves the song as well)
-        artistRepository.save(artist);
-
         // Fetch the artist from the database and verify it exists
         Optional<Artist> optionalArtist = artistRepository.findById(artist.getId());
         assertThat(optionalArtist).isPresent();

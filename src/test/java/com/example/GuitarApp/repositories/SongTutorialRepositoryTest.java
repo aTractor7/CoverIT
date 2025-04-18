@@ -48,13 +48,13 @@ class SongTutorialRepositoryTest {
         songTutorial.setSong(song);
         song.setTutorials(Set.of(songTutorial));
         user.setTutorials(Set.of(songTutorial));
+
+        songTutorialRepository.save(songTutorial);
     }
 
     @Test
     @DisplayName("Save SongTutorial and verify relationships")
     void saveSongTutorialAndVerifyRelationships() {
-        songTutorialRepository.save(songTutorial);
-
         // Fetch the saved SongTutorial from the database
         Optional<SongTutorial> optionalSongTutorial = songTutorialRepository.findById(songTutorial.getId());
         assertThat(optionalSongTutorial).isPresent();
