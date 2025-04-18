@@ -24,6 +24,7 @@ public class Fingering {
     @JoinColumn(name = "chord_id", referencedColumnName = "id", nullable = false)
     private Chord chord;
 
+    // Тимчасово nullable (TODO: зробити not null пізніше)
     @Lob
     private byte[] img;
 

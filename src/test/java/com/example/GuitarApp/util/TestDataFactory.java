@@ -104,4 +104,19 @@ public class TestDataFactory {
 
         return songBeat;
     }
+
+    public static Jam getJamAndNote() {
+        Note note = new Note();
+        note.setName("A");
+        note.setFrequency(440.0);
+        note.setOctave(1);
+
+        Jam jam = new Jam();
+        jam.setAudio(new byte[]{1, 2, 3});
+        jam.setGenre(SongGenre.ROCK);
+        jam.setJamKey(note);
+
+        note.setJams(Set.of(jam));
+        return jam;
+    }
 }
