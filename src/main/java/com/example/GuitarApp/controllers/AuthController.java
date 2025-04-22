@@ -3,13 +3,15 @@ package com.example.GuitarApp.controllers;
 import com.example.GuitarApp.entity.User;
 import com.example.GuitarApp.entity.dto.UserRegistrationDto;
 import com.example.GuitarApp.services.UserService;
-import com.example.GuitarApp.util.ErrorResponse;
+import com.example.GuitarApp.entity.dto.ErrorResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 import static com.example.GuitarApp.util.ErrorUtils.generateFieldErrorMessage;
 
@@ -46,8 +48,8 @@ public class AuthController {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(IllegalArgumentException e) {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(), System.currentTimeMillis());
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                "Registration exception",e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
