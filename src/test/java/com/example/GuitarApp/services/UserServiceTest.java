@@ -14,6 +14,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -31,6 +33,12 @@ class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private ErrorMessageService errorMessageService;
+
+    @Mock
+    private UserDetailsServiceImpl userDetailsService;
 
     @InjectMocks
     private UserService userService;
@@ -57,11 +65,14 @@ class UserServiceTest {
 
         @Test
         void shouldThrowException_WhenUserIdNotFound() {
-            given(userRepository.findById(99)).willReturn(Optional.empty());
+            int id = 99;
+            given(userRepository.findById(id)).willReturn(Optional.empty());
+            when(errorMessageService.getErrorMessage("user.notfound.byId", id))
+                    .thenReturn("User with id " + id + " not found");
 
             assertThatThrownBy(() -> userService.findOne(99))
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessageContaining("User with id 99 not found");
+                    .hasMessageContaining("User with id " + id + " not found");
         }
 
         @Test
@@ -75,11 +86,14 @@ class UserServiceTest {
 
         @Test
         void shouldThrowException_WhenUsernameNotFound() {
-            given(userRepository.findByUsername("nope")).willReturn(Optional.empty());
+            String username = "nope";
+            given(userRepository.findByUsername(username)).willReturn(Optional.empty());
+            when(errorMessageService.getErrorMessage("user.notfound.byUsername", username))
+                    .thenReturn("User with username " + username + " not found");
 
             assertThatThrownBy(() -> userService.findOne("nope"))
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessageContaining("User with username nope not found");
+                    .hasMessageContaining("User with username " + username + " not found");
         }
     }
 
@@ -91,7 +105,7 @@ class UserServiceTest {
         void shouldRegisterUser_WithEncodedPasswordAndDefaultRole() {
             given(passwordEncoder.encode(testUser.getPassword())).willReturn("encodedPass");
 
-            userService.register(testUser);
+            userService.create(testUser);
 
             ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
             then(userRepository).should().save(captor.capture());
@@ -115,7 +129,7 @@ class UserServiceTest {
 
             assertThat(result.getUsername()).isEqualTo("newUser");
             assertThat(result.getEmail()).isEqualTo("new@mail.com");
-            assertThat(result.getRole()).isEqualTo(Role.ADMIN);
+            assertThat(result.getRole()).isEqualTo(Role.USER);
         }
 
         @Test

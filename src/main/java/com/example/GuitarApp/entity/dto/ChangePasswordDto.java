@@ -1,7 +1,7 @@
 package com.example.GuitarApp.entity.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.example.GuitarApp.util.validators.annotation.NotEqualsField;
+import com.example.GuitarApp.util.validators.annotation.ValidOldPassword;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordDto {
+@NotEqualsField(first = "oldPassword", second = "newPassword", message = "{validation.not_equals_passwords}")
+public class ChangePasswordDto{
 
+    @ValidOldPassword
     String oldPassword;
 
-    //TODO: add custom annotation validation on password
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 100, message = "Password should be at least 8 characters. Or less then 100")
+    //    TODO: uncomment in prod
+//    @ValidPassword
     String newPassword;
 }

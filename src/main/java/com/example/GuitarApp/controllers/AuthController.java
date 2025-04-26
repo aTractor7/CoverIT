@@ -2,18 +2,28 @@ package com.example.GuitarApp.controllers;
 
 import com.example.GuitarApp.entity.User;
 import com.example.GuitarApp.entity.dto.UserRegistrationDto;
+import com.example.GuitarApp.services.ErrorMessageService;
+import com.example.GuitarApp.services.UserDetailsServiceImpl;
 import com.example.GuitarApp.services.UserService;
 import com.example.GuitarApp.entity.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static com.example.GuitarApp.util.ErrorUtils.generateFieldErrorMessage;
+import static com.example.GuitarApp.util.ErrorUtils.getStackTraceAsString;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,10 +32,12 @@ public class AuthController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final ErrorMessageService errMsg;
 
-    public AuthController(UserService userService, ModelMapper modelMapper) {
+    public AuthController(UserService userService, ModelMapper modelMapper, ErrorMessageService errMsg) {
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.errMsg = errMsg;
     }
 
 
@@ -38,18 +50,23 @@ public class AuthController {
             throw new IllegalArgumentException(generateFieldErrorMessage(bindingResult.getFieldErrors()));
         }
 
-        userService.register(user);
+        User saved = userService.create(user);
 
-        //TODO: розібратись з цим. Треба чекнуть чи у юзера після реєстрації з'являється id і додати хедер в респонс ентіті
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Location", "/api/users/" + userId);
-        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Location", "users/" + saved.getId());
+        return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        userService.performLogout(request, response);
+        return ResponseEntity.ok(Map.of("message", errMsg.getErrorMessage("auth.logout")));
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(IllegalArgumentException e) {
         ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-                "Registration exception",e.getMessage());
+                "Registration exception",e.getMessage(), getStackTraceAsString(e));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

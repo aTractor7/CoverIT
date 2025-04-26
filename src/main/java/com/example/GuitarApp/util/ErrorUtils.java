@@ -2,7 +2,9 @@ package com.example.GuitarApp.util;
 
 import org.springframework.validation.FieldError;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ErrorUtils {
     public static String generateFieldErrorMessage(List<FieldError> fieldErrors){
@@ -13,8 +15,18 @@ public class ErrorUtils {
                     .append(error.getField())
                     .append(": ")
                     .append(error.getDefaultMessage() == null ? error.getCode() : error.getDefaultMessage())
-                    .append(";");
+                    .append(";  ");
         }
         return message.toString();
+    }
+
+    public static String getStackTraceAsString(Throwable throwable) {
+        if (throwable == null) {
+            return "";
+        }
+        return throwable.toString() + "\n" +
+                Arrays.stream(throwable.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .collect(Collectors.joining("\n"));
     }
 }

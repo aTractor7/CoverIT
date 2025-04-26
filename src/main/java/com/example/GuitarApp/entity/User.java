@@ -20,26 +20,18 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Username cannot be empty")
-    @Size(max = 30, message = "Username cannot be longer than 30 characters")
     @Column(nullable = false, unique = true, length = 30)
     private String username;
 
-    @NotBlank(message = "Email cannot be empty")
-    @Email(message = "Email should be valid")
-    @Size(max = 50, message = "Email cannot be longer than 50 characters")
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    //TODO: add custom annotation validation on password
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 100, message = "Password should be at least 8 characters. Or less then 100")
     @Column(nullable = false, length = 100)
     private String password;
 
@@ -54,15 +46,14 @@ public class User {
     @Column(nullable = false, length = 30)
     private Role role = Role.USER;
 
-    @NotNull(message = "Skill cannot be null")
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Skill skill = Skill.BEGINNER;
 
-    @Size(max = 30, message = "Instrument cannot be longer than 30 characters")
+    @Column(length = 30)
     private String instrument;
 
-    @Size(max = 500, message = "Bio cannot be longer than 500 characters")
+    @Column(length = 500)
     private String bio;
 
     @OneToMany(mappedBy = "tutorialAuthor", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
