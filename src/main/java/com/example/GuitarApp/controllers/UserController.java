@@ -1,7 +1,6 @@
 package com.example.GuitarApp.controllers;
 
 import com.example.GuitarApp.entity.User;
-import com.example.GuitarApp.entity.UserDetailsImpl;
 import com.example.GuitarApp.entity.dto.ChangePasswordDto;
 import com.example.GuitarApp.entity.dto.ErrorResponse;
 import com.example.GuitarApp.entity.dto.UserDto;
@@ -13,15 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +57,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable int id) {
         return ResponseEntity.ok(convertToUserDto(userService.findOne(id)));
+    }
+
+    @GetMapping("/authenticated")
+    public ResponseEntity<UserDto> getAuthenticatedUser() {
+        return ResponseEntity.ok(convertToUserDto(userService.findAuthenticated()));
     }
 
 

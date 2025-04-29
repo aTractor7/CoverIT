@@ -23,10 +23,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -61,7 +63,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginProcessingUrl("/process_login")
-                        .defaultSuccessUrl("/user/registered", true)
+                        .successHandler(authenticationSuccessHandler)
                         .failureUrl("/login?error")
                 )
                 .logout(out -> out

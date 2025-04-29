@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,6 +66,11 @@ public class UserService implements CrudService<User>{
                 .orElseThrow(() -> new EntityNotFoundException(
                         errMsg.getErrorMessage("user.notfound.byUsername", username)
                 ));
+    }
+
+    public User findAuthenticated() {
+        UserDetails userDetails = userDetailsService.getCurrentUserDetails();
+        return findOne(userDetails.getUsername());
     }
 
     public boolean matchPassword(String checked, String encodedPassword) {
