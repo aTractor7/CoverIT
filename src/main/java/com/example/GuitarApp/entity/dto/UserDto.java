@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+//TODO: не працюють імпорти повідомлень
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

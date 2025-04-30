@@ -4,7 +4,7 @@ import com.example.GuitarApp.entity.User;
 import com.example.GuitarApp.entity.UserDetailsImpl;
 import com.example.GuitarApp.entity.dto.UserDto;
 import com.example.GuitarApp.repositories.UserRepository;
-import com.example.GuitarApp.services.AuthorizationService;
+import com.example.GuitarApp.services.authorization.impl.UserAuthorizationService;
 import com.example.GuitarApp.services.ErrorMessageService;
 import com.example.GuitarApp.services.UserDetailsServiceImpl;
 import com.example.GuitarApp.services.UserService;
@@ -48,7 +48,7 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @MockitoBean
-    private AuthorizationService authorizationService;
+    private UserAuthorizationService authorizationService;
 
     @MockitoBean
     private UserService userService;
@@ -118,7 +118,7 @@ public class UserControllerTest {
         userDto.setEmail(testUser.getEmail());
         userDto.setSkill(testUser.getSkill());
 
-        when(authorizationService.canUpdateUser(1)).thenReturn(true);
+        when(authorizationService.canUpdate(1)).thenReturn(true);
         when(modelMapper.map(any(UserDto.class), eq(User.class))).thenReturn(testUser);
         when(userService.update(eq(1), any(User.class))).thenReturn(testUser);
         when(modelMapper.map(any(User.class), eq(UserDto.class))).thenReturn(userDto);
@@ -142,7 +142,7 @@ public class UserControllerTest {
         userDto.setSkill(testUser.getSkill());
 
 
-        when(authorizationService.canUpdateUser(1)).thenReturn(true);
+        when(authorizationService.canUpdate(1)).thenReturn(true);
         when(userRepository.existsByUsernameAndIdNot(eq(userDto.getUsername()), anyInt())).thenReturn(true);
         when(userRepository.existsByEmailAndIdNot(eq(userDto.getEmail()), anyInt())).thenReturn(true);
 
@@ -156,7 +156,7 @@ public class UserControllerTest {
 
     @Test
     void testUpdatePassword() throws Exception {
-        when(authorizationService.canUpdateUser(1)).thenReturn(true);
+        when(authorizationService.canUpdate(1)).thenReturn(true);
         when(userService.matchPassword(any(), any())).thenReturn(true);
 
         mockMvc.perform(put("/users/1/update-password")
@@ -168,7 +168,7 @@ public class UserControllerTest {
 
     @Test
     void testHandlePasswordChangeValidationException() throws Exception {
-        when(authorizationService.canUpdateUser(1)).thenReturn(true);
+        when(authorizationService.canUpdate(1)).thenReturn(true);
         when(userService.matchPassword(any(), any())).thenReturn(true);
 
         mockMvc.perform(put("/users/1/update-password")
@@ -194,7 +194,7 @@ public class UserControllerTest {
     void testDeleteUser() throws Exception {
         doNothing().when(userService).delete(1);
 
-        when(authorizationService.canDeleteUser(1)).thenReturn(true);
+        when(authorizationService.canDelete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isOk())

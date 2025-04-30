@@ -11,7 +11,7 @@ public interface CrudService<T> {
 
     T create(T entity);
 
-    T update(int id, T entity);
+    T update(int id, T updatedEntity);
 
     void delete(int id);
 }

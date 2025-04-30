@@ -23,22 +23,27 @@ public class Song implements AbstractEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Title cannot be empty")
-    @Size(max = 50, message = "Title cannot be longer than 50 characters")
     @Column(nullable = false, length = 50)
     private String title;
 
-    @NotNull(message = "Genre is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30, columnDefinition = "VARCHAR(30)")
     private SongGenre genre;
 
-    @NotNull(message = "Year of publish is required")
     @Column(name = "release_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate releaseDate;
 
-    @ManyToMany(mappedBy = "songs", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne
+    @JoinColumn(name = "created_by_user")
+    private User createdBy;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "songs_authors",
+            joinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false)
+    )
     private Set<Artist> songAuthors;
 
     @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

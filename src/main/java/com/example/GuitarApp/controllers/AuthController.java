@@ -18,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -44,17 +46,18 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<UserRegistrationDto> registration(@RequestBody @Valid UserRegistrationDto userDto,
                                                             BindingResult bindingResult) {
-        User user = convertToUser(userDto);
-
         if(bindingResult.hasErrors()) {
             throw new IllegalArgumentException(generateFieldErrorMessage(bindingResult.getFieldErrors()));
         }
 
+        User user = convertToUser(userDto);
         User saved = userService.create(user);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Location", "users/" + saved.getId());
-        return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(saved.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(userDto);
     }
 
     @PostMapping("/logout")

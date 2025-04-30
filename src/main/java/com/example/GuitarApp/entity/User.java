@@ -65,6 +65,10 @@ public class User implements AbstractEntity{
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<PersonalLibrary> library;
 
+    public User(int id) {
+        this.id = id;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.joinDate = LocalDate.now();

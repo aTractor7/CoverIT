@@ -46,6 +46,7 @@ public class UserService implements CrudService<User>{
         this.errMsg = errMsg;
     }
 
+    @Override
     public List<User> findPage(int page, int pageSize, Optional<String> sortField) {
         Pageable pageable = sortField
                 .map(field -> PageRequest.of(page, pageSize, Sort.by(field)))
@@ -54,6 +55,7 @@ public class UserService implements CrudService<User>{
         return userRepository.findAll(pageable).getContent();
     }
 
+    @Override
     public User findOne(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -77,6 +79,7 @@ public class UserService implements CrudService<User>{
         return passwordEncoder.matches(checked, encodedPassword);
     }
 
+    @Override
     @Transactional
     public User create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -85,12 +88,10 @@ public class UserService implements CrudService<User>{
         return userRepository.save(user);
     }
 
+    @Override
     @Transactional
     public User update(int id, User updatedUser) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        errMsg.getErrorMessage("user.notfound.byId", id)
-                ));
+        User user = findOne(id);
 
         boolean usernameChanged = !user.getUsername().equals(updatedUser.getUsername());
 
@@ -118,6 +119,7 @@ public class UserService implements CrudService<User>{
         user.setPassword(passwordEncoder.encode(password));
     }
 
+    @Override
     @Transactional
     public void delete(int id) {
         userRepository.deleteById(id);

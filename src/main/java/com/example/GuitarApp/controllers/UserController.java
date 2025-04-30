@@ -5,7 +5,6 @@ import com.example.GuitarApp.entity.dto.ChangePasswordDto;
 import com.example.GuitarApp.entity.dto.ErrorResponse;
 import com.example.GuitarApp.entity.dto.UserDto;
 import com.example.GuitarApp.services.ErrorMessageService;
-import com.example.GuitarApp.services.UserDetailsServiceImpl;
 import com.example.GuitarApp.services.UserService;
 import com.example.GuitarApp.util.exceptions.PasswordChangeValidationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,7 +65,7 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    @PreAuthorize("@authz.canUpdateUser(#id)")
+    @PreAuthorize("@authzUser.canUpdate(#id)")
     public ResponseEntity<UserDto> update(@PathVariable int id,
                                           @RequestBody @Valid UserDto userDTO,
                                           BindingResult bindingResult) {
@@ -79,7 +78,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/update-password")
-    @PreAuthorize("@authz.canUpdateUser(#id)")
+    @PreAuthorize("@authzUser.canUpdate(#id)")
     public ResponseEntity<Map<String, String>> updatePassword(HttpServletRequest request,
                                                               HttpServletResponse response,
                                                               @PathVariable int id,
@@ -96,7 +95,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@authz.canDeleteUser(#id)")
+    @PreAuthorize("@authzUser.canDelete(#id)")
     public ResponseEntity<Map<String, String>> delete(@PathVariable int id,
                                                       HttpServletRequest request,
                                                       HttpServletResponse response) {

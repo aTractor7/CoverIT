@@ -2,6 +2,7 @@ package com.example.GuitarApp.repositories;
 
 import com.example.GuitarApp.entity.Artist;
 import com.example.GuitarApp.entity.Song;
+import com.example.GuitarApp.entity.User;
 import com.example.GuitarApp.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,15 +23,20 @@ class SongArtistRepositoryTest {
     @Autowired
     private ArtistRepository artistRepository;
 
+    private User creator;
     private Song song;
     private Artist artist;
 
     @BeforeEach
     public void setUp() {
+        creator = TestDataFactory.getUser();
         song = TestDataFactory.getSongWithAuthor();
         artist = song.getSongAuthors().stream().findFirst().get();
 
-        artistRepository.save(artist);
+        song.setCreatedBy(creator);
+        artist.setCreatedBy(creator);
+
+        songRepository.save(song);
     }
 
     @Test
@@ -56,5 +62,6 @@ class SongArtistRepositoryTest {
         Song fetchedSong = optionalSong.get();
         assertThat(fetchedSong.getSongAuthors()).hasSize(1);
         assertThat(fetchedSong.getSongAuthors().iterator().next().getName()).isEqualTo("Queen");
+        assertThat(fetchedSong.getCreatedBy().getUsername()).isEqualTo(creator.getUsername());
     }
 }
