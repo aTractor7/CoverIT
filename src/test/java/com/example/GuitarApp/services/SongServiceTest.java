@@ -2,6 +2,7 @@ package com.example.GuitarApp.services;
 
 import com.example.GuitarApp.entity.Song;
 import com.example.GuitarApp.entity.UserDetailsImpl;
+import com.example.GuitarApp.repositories.ArtistRepository;
 import com.example.GuitarApp.repositories.SongRepository;
 import com.example.GuitarApp.util.TestDataFactory;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +25,9 @@ class SongServiceTest {
 
     @Mock
     private SongRepository songRepository;
+
+    @Mock
+    private ArtistRepository artistRepository;
 
     @Mock
     private ErrorMessageService errorMessageService;

@@ -87,7 +87,7 @@ public class TestDataFactory {
 
         Fingering fingering = new Fingering();
         fingering.setChord(chord);
-        fingering.setImg(new byte[]{1, 2, 3});
+        fingering.setImgPath("Path");
 
         SongBeat songBeat = new SongBeat();
         songBeat.setText("Beat 1");

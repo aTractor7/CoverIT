@@ -121,7 +121,7 @@ public class SongController {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(IllegalArgumentException e) {
         ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-                "User update exception", e.getMessage(), getStackTraceAsString(e));
+                "Song validation exception", e.getMessage(), getStackTraceAsString(e));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,16 +36,31 @@ public class UniqueSongTitleAuthorValidator {
             return true;
 //        //////////////////////////////////////////////////////////////////////////////////
 
-        List<String> authorsName = songDto.getSongAuthors().stream()
+        List<ArtistShortDto> authors = new ArrayList<>(songDto.getSongAuthors());
+
+        List<String> authorsName = authors.stream()
                 .map(ArtistShortDto::getName)
                 .toList();
 
         List<Artist> found = artistRepository.findByNameIn(authorsName);
-        if(found.size() == authorsName.size()) return true;
 
-        errors.rejectValue("songAuthors", "400", "No song authors with such name found");
+        if (found.size() != authors.size()) {
+            errors.rejectValue("songAuthors", "400", "No song authors with such name found");
+        } else {
+            // Перевіряємо, чи всі автори з однаковими іменами мають однакові ID
+            for (ArtistShortDto dtoAuthor : authors) {
+                Artist dbAuthor = found.stream()
+                        .filter(a -> a.getName().equals(dtoAuthor.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (dbAuthor == null || !(dbAuthor.getId() == dtoAuthor.getId())) {
+                    errors.rejectValue("songAuthors", "400", "Mismatch between author names and IDs");
+                    break;
+                }
+            }
+        }
 //        ///////////////////////////////////////////////////////////////////////////////
-
 
 
         Optional<Song> songOptional = songRepository.findByTitle(songDto.getTitle());
