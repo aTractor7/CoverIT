@@ -1,5 +1,6 @@
 package com.example.GuitarApp.controllers;
 
+import com.example.GuitarApp.entity.Comment;
 import com.example.GuitarApp.entity.SongBeat;
 import com.example.GuitarApp.entity.SongTutorial;
 import com.example.GuitarApp.entity.dto.*;
@@ -8,7 +9,6 @@ import com.example.GuitarApp.services.SongTutorialService;
 import com.example.GuitarApp.util.validators.SongTutorialValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.GuitarApp.util.ErrorUtils.generateFieldErrorMessage;
@@ -114,14 +112,7 @@ public class SongTutorialController {
     //TODO: винести всі мапери в окремий клас
     private SongTutorial convertToSongTutorial(SongTutorialCreateDto songTutorialCreateDto) {
         SongTutorial songTutorial = modelMapper.map(songTutorialCreateDto, SongTutorial.class);
-
-        songTutorial.getSongBeats()
-                .forEach(beat -> beat.setSongTutorial(songTutorial));
-
-        for(SongBeat songBeat : songTutorial.getSongBeats()) {
-            songBeat.getBeatChords()
-                    .forEach(beatChord -> beatChord.setSongBeat(songBeat));
-        }
+        setupSongTutorialReferences(songTutorial);
 
         return songTutorial;
     }
@@ -132,7 +123,12 @@ public class SongTutorialController {
 
     private SongTutorial convertToSongTutorial(SongTutorialDto songTutorialDto) {
         SongTutorial songTutorial = modelMapper.map(songTutorialDto, SongTutorial.class);
+        setupSongTutorialReferences(songTutorial);
 
+        return songTutorial;
+    }
+
+    private void setupSongTutorialReferences(SongTutorial songTutorial) {
         songTutorial.getSongBeats()
                 .forEach(beat -> beat.setSongTutorial(songTutorial));
 
@@ -140,13 +136,22 @@ public class SongTutorialController {
             songBeat.getBeatChords()
                     .forEach(beatChord -> beatChord.setSongBeat(songBeat));
         }
-
-        return songTutorial;
     }
 
     //TODO: якщо в chord beat recommendedFingering.getChord.getId() співпадає з chord.getId() виникає помилка
     private SongTutorialDto convertToSongTutorialDto(SongTutorial songTutorial) {
-        return modelMapper.map(songTutorial, SongTutorialDto.class);
+        Set<Comment> commentSet = songTutorial.getComments();
+        songTutorial.setComments(null);
+
+        SongTutorialDto songTutorialDto = modelMapper.map(songTutorial, SongTutorialDto.class);
+
+        if(commentSet != null)
+            songTutorialDto.setComments(
+                    commentSet.stream()
+                            .map(c -> modelMapper.map(c, CommentDto.class))
+                            .collect(Collectors.toSet())
+            );
+        return songTutorialDto;
     }
 
     private SongTutorialShortDto convertToSongTutorialShortDto(SongTutorial songTutorial) {

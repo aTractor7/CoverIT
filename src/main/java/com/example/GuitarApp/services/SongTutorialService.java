@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -59,10 +60,18 @@ public class SongTutorialService implements CrudService<SongTutorial>{
 
     @Override
     public SongTutorial findOne(int id) {
-        return songTutorialRepository.findById(id)
+        SongTutorial tutorial = songTutorialRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         errMsg.getErrorMessage("songTutorial.notfound.byId", id)
                 ));
+
+        if(tutorial.getComments() != null)
+            tutorial.setComments(
+                    tutorial.getComments().stream()
+                        .filter(c -> c.getAnswerOn() == null)
+                        .collect(Collectors.toSet())
+            );
+        return tutorial;
     }
 
     @Override

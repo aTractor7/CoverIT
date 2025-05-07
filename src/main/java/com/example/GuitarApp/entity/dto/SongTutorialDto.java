@@ -37,9 +37,8 @@ public class SongTutorialDto {
     @NotNull
     private SongShortDto song;
 
-//    @NotNull
-//    @Valid
-//    private List<CommentDto> comments;
+    @Valid
+    private Set<CommentDto> comments;
 
     @NotNull
     @Valid

@@ -4,5 +4,5 @@ public interface AuthorizationService {
 
     boolean canDelete(int targetId);
 
-    boolean canUpdate(int targetUserId);
+    boolean canUpdate(int targetId);
 }

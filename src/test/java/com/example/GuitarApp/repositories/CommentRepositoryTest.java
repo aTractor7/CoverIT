@@ -53,9 +53,9 @@ class CommentRepositoryTest {
 
         comments = TestDataFactory.getComments();
         comments.forEach(comment -> comment.setSongTutorial(songTutorial));
-        comments.get(0).setUser(user1);
-        comments.get(1).setUser(user2);
-        comments.get(2).setUser(user1);
+        comments.get(0).setAuthor(user1);
+        comments.get(1).setAuthor(user2);
+        comments.get(2).setAuthor(user1);
 
         commentRepository.saveAll(comments);
     }
@@ -81,7 +81,7 @@ class CommentRepositoryTest {
     void shouldSaveNewComment() {
         Comment newComment = new Comment();
         newComment.setText("New test comment");
-        newComment.setUser(comments.get(0).getUser());
+        newComment.setAuthor(comments.get(0).getAuthor());
         newComment.setSongTutorial(comments.get(0).getSongTutorial());
         newComment.setAnswerOn(comments.get(1));
 

@@ -155,7 +155,6 @@ public class SongTutorialControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testDeleteTutorial() throws Exception {
-        doNothing().when(songTutorialService).delete(1);
         when(authorizationService.canDelete(1)).thenReturn(true);
         when(errorMessageService.getErrorMessage("songTutorial.deleted")).thenReturn("Deleted");
 
