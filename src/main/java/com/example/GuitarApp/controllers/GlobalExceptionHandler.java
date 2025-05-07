@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -76,6 +77,17 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Validation Exception", e.getMessage(), getStackTraceAsString(e));
+
+        return new ResponseEntity<>(errResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(MissingServletRequestParameterException e) {
+        if(e.getCause() instanceof UniqueFieldValidatorConfigurationException)
+            handleException((UniqueFieldValidatorConfigurationException) e.getCause());
+
+        ErrorResponse errResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Request Param Exception", e.getMessage(), getStackTraceAsString(e));
 
         return new ResponseEntity<>(errResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

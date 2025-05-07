@@ -1,10 +1,12 @@
 package com.example.GuitarApp.controllers;
 
 import com.example.GuitarApp.entity.Comment;
+import com.example.GuitarApp.entity.PersonalLibrary;
 import com.example.GuitarApp.entity.SongBeat;
 import com.example.GuitarApp.entity.SongTutorial;
 import com.example.GuitarApp.entity.dto.*;
 import com.example.GuitarApp.services.ErrorMessageService;
+import com.example.GuitarApp.services.PersonalLibraryService;
 import com.example.GuitarApp.services.SongTutorialService;
 import com.example.GuitarApp.util.validators.SongTutorialValidator;
 import jakarta.validation.Valid;

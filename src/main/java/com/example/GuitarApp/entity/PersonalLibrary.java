@@ -31,6 +31,10 @@ public class PersonalLibrary implements AbstractEntity{
     @JoinColumn(name = "song_tutorial_id", referencedColumnName = "id", nullable = false)
     private SongTutorial songTutorial;
 
+    public PersonalLibrary(SongTutorial songTutorial) {
+        this.songTutorial = songTutorial;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.addDate = LocalDateTime.now();
