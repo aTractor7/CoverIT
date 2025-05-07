@@ -3,13 +3,10 @@ package com.example.GuitarApp.controllers;
 import com.example.GuitarApp.entity.Artist;
 import com.example.GuitarApp.entity.User;
 import com.example.GuitarApp.entity.dto.ArtistDto;
-import com.example.GuitarApp.entity.dto.CreateArtistDto;
-import com.example.GuitarApp.entity.dto.SongShortDto;
+import com.example.GuitarApp.entity.dto.ArtistCreateDto;
 import com.example.GuitarApp.services.ArtistService;
 import com.example.GuitarApp.services.ErrorMessageService;
 import com.example.GuitarApp.services.authorization.impl.ArtistAuthorizationService;
-import com.example.GuitarApp.services.authorization.impl.UserAuthorizationService;
-import com.example.GuitarApp.util.TestDataFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +54,7 @@ public class ArtistControllerTest {
 
     private Artist artist;
     private ArtistDto artistDto;
-    private CreateArtistDto createArtistDto;
+    private ArtistCreateDto artistCreateDto;
 
     @BeforeEach
     void setUp() {
@@ -76,8 +73,8 @@ public class ArtistControllerTest {
         artistDto.setCreator_id(99);
         artistDto.setSongs(Set.of());
 
-        createArtistDto = new CreateArtistDto();
-        createArtistDto.setName("Test Artist");
+        artistCreateDto = new ArtistCreateDto();
+        artistCreateDto.setName("Test Artist");
     }
 
     @Test
@@ -106,13 +103,13 @@ public class ArtistControllerTest {
 
     @Test
     void testCreateArtist() throws Exception {
-        when(modelMapper.map(any(CreateArtistDto.class), eq(Artist.class))).thenReturn(artist);
+        when(modelMapper.map(any(ArtistCreateDto.class), eq(Artist.class))).thenReturn(artist);
         when(artistService.create(any(Artist.class))).thenReturn(artist);
-        when(modelMapper.map(any(Artist.class), eq(CreateArtistDto.class))).thenReturn(createArtistDto);
+        when(modelMapper.map(any(Artist.class), eq(ArtistCreateDto.class))).thenReturn(artistCreateDto);
 
         mockMvc.perform(post("/artists")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createArtistDto)))
+                        .content(objectMapper.writeValueAsString(artistCreateDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Test Artist"));
     }
@@ -120,13 +117,13 @@ public class ArtistControllerTest {
     @Test
     void testUpdateArtist() throws Exception {
         when(authorizationService.canUpdate(1)).thenReturn(true);
-        when(modelMapper.map(any(CreateArtistDto.class), eq(Artist.class))).thenReturn(artist);
+        when(modelMapper.map(any(ArtistCreateDto.class), eq(Artist.class))).thenReturn(artist);
         when(artistService.update(eq(1), any(Artist.class))).thenReturn(artist);
         when(modelMapper.map(any(Artist.class), eq(ArtistDto.class))).thenReturn(artistDto);
 
         mockMvc.perform(put("/artists/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createArtistDto)))
+                        .content(objectMapper.writeValueAsString(artistCreateDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Artist"));
     }

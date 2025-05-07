@@ -1,6 +1,7 @@
 package com.example.GuitarApp.util;
 
 import com.example.GuitarApp.entity.*;
+import com.example.GuitarApp.entity.dto.*;
 import com.example.GuitarApp.entity.enums.Role;
 import com.example.GuitarApp.entity.enums.Skill;
 import com.example.GuitarApp.entity.enums.SongGenre;
@@ -98,11 +99,45 @@ public class TestDataFactory {
         beatChord.setChord(chord);
         beatChord.setRecommendedFingering(fingering);
 
-        songBeat.setBeatChords(Set.of(beatChord));
+        List<BeatChord> beatChords = new ArrayList<>();
+        beatChords.add(beatChord);
+        songBeat.setBeatChords(beatChords);
         fingering.setRecommendedFor(Set.of(beatChord));
         chord.setBeatChords(Set.of(beatChord));
 
         return songBeat;
+    }
+
+    public static SongBeatCreationDto getSongBeatCreationDto(SongBeat songBeat, BeatChord beatChord) {
+        SongBeatCreationDto songBeatCreationDto = new SongBeatCreationDto();
+        songBeatCreationDto.setText(songBeat.getText());
+        songBeatCreationDto.setBeat(songBeat.getBeat());
+
+        BeatChordCreateDto beatChordCreateDto = new BeatChordCreateDto();
+        ChordShortDto chordShortDto = new ChordShortDto();
+        chordShortDto.setId(beatChord.getChord().getId());
+        chordShortDto.setName(beatChord.getChord().getName());
+
+        beatChordCreateDto.setChord(chordShortDto);
+
+        songBeatCreationDto.setBeatChords(List.of(beatChordCreateDto));
+        return songBeatCreationDto;
+    }
+
+    public static SongBeatDto getSongBeatDto(SongBeat songBeat, BeatChord beatChord) {
+        SongBeatDto songBeatDto = new SongBeatDto();
+        songBeatDto.setId(songBeat.getId());
+        songBeatDto.setBeat(songBeat.getBeat());
+
+        BeatChordDto beatChordDto = new BeatChordDto();
+        beatChordDto.setId(beatChord.getId());
+
+        ChordDto chordDto = new ChordDto();
+        chordDto.setId(beatChord.getChord().getId());
+        chordDto.setName(beatChord.getChord().getName());
+        beatChordDto.setChord(chordDto);
+        songBeatDto.setBeatChords(List.of(beatChordDto));
+        return songBeatDto;
     }
 
     public static Jam getJamAndNote() {

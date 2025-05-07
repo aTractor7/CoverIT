@@ -1,7 +1,6 @@
 package com.example.GuitarApp.controllers;
 
 import com.example.GuitarApp.entity.Artist;
-import com.example.GuitarApp.entity.Song;
 import com.example.GuitarApp.entity.dto.*;
 import com.example.GuitarApp.services.ArtistService;
 import com.example.GuitarApp.services.ErrorMessageService;
@@ -57,7 +56,7 @@ public class ArtistController {
     }
 
     @PostMapping()
-    public ResponseEntity<CreateArtistDto> save(@RequestBody @Valid CreateArtistDto artistDto,
+    public ResponseEntity<ArtistCreateDto> save(@RequestBody @Valid ArtistCreateDto artistDto,
                                                 BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new IllegalArgumentException(generateFieldErrorMessage(bindingResult.getFieldErrors()));
@@ -77,7 +76,7 @@ public class ArtistController {
     @PutMapping("/{id}")
     @PreAuthorize("@authzArtist.canUpdate(#id)")
     public ResponseEntity<ArtistDto> update(@PathVariable int id,
-                                                  @RequestBody @Valid CreateArtistDto artistDto,
+                                                  @RequestBody @Valid ArtistCreateDto artistDto,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException(generateFieldErrorMessage(bindingResult.getFieldErrors()));
@@ -97,12 +96,12 @@ public class ArtistController {
         return ResponseEntity.ok(Map.of("message", errMsg.getErrorMessage("artist.deleted")));
     }
 
-    private Artist convertToArtist(CreateArtistDto artistDto) {
+    private Artist convertToArtist(ArtistCreateDto artistDto) {
         return modelMapper.map(artistDto, Artist.class);
     }
 
-    private CreateArtistDto convertToCreateArtistDto(Artist artist) {
-        return modelMapper.map(artist, CreateArtistDto.class);
+    private ArtistCreateDto convertToCreateArtistDto(Artist artist) {
+        return modelMapper.map(artist, ArtistCreateDto.class);
     }
 
     private ArtistDto convertToArtistDto(Artist artist) {

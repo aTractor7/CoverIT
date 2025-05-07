@@ -50,12 +50,12 @@ public class SongController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Optional<String> sortField) {
 
-        List<SongDto> artists = songService.findPage(page, size, sortField)
+        List<SongDto> songs = songService.findPage(page, size, sortField)
                 .stream()
                 .map(this::convertToSongDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(artists);
+        return ResponseEntity.ok(songs);
     }
 
     @GetMapping("/{id}")

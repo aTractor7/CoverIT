@@ -17,15 +17,15 @@ public class BeatChord implements AbstractEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_beat_id", referencedColumnName = "id", nullable = false)
     private SongBeat songBeat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chord_id", referencedColumnName = "id", nullable = false)
     private Chord chord;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recommended_fingering_id", referencedColumnName = "id")
     private Fingering recommendedFingering;
 }

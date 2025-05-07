@@ -1,7 +1,6 @@
 package com.example.GuitarApp.entity.dto;
 
 import com.example.GuitarApp.repositories.ArtistRepository;
-import com.example.GuitarApp.repositories.UserRepository;
 import com.example.GuitarApp.util.validators.annotation.UniqueField;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,7 +13,7 @@ import lombok.Data;
         canUpdate = true,
         message = "{artist.name.unique}"
 )
-public class CreateArtistDto {
+public class ArtistCreateDto {
 
     private int id;
 

@@ -21,12 +21,10 @@ public class UniqueSongTitleAuthorValidator {
 
     //TODO: rewrite in future
 
-    private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
 
     @Autowired
-    public UniqueSongTitleAuthorValidator(SongRepository songRepository, ArtistRepository artistRepository) {
-        this.songRepository = songRepository;
+    public UniqueSongTitleAuthorValidator(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
     }
 
@@ -46,39 +44,8 @@ public class UniqueSongTitleAuthorValidator {
 
         if (found.size() != authors.size()) {
             errors.rejectValue("songAuthors", "400", "No song authors with such name found");
-        } else {
-            // Перевіряємо, чи всі автори з однаковими іменами мають однакові ID
-            for (ArtistShortDto dtoAuthor : authors) {
-                Artist dbAuthor = found.stream()
-                        .filter(a -> a.getName().equals(dtoAuthor.getName()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (dbAuthor == null || !(dbAuthor.getId() == dtoAuthor.getId())) {
-                    errors.rejectValue("songAuthors", "400", "Mismatch between author names and IDs");
-                    break;
-                }
-            }
+            return false;
         }
-//        ///////////////////////////////////////////////////////////////////////////////
-
-
-        Optional<Song> songOptional = songRepository.findByTitle(songDto.getTitle());
-
-        if (songOptional.isEmpty() || songDto.getId() == songOptional.get().getId()) return true;
-
-        Song song = songOptional.get();
-
-        Set<Integer> songAuthorsIds = song.getSongAuthors().stream()
-                .map(Artist::getId)
-                .collect(Collectors.toSet());
-        Set<Integer> songDtoAuthorsIds = songDto.getSongAuthors().stream()
-                .map(ArtistShortDto::getId)
-                .collect(Collectors.toSet());
-
-        if(!songAuthorsIds.containsAll(songDtoAuthorsIds)) return true;
-
-        errors.rejectValue("title", "400", "Song with this title and authors is already exists");
-        return false;
+        return true;
     }
 }

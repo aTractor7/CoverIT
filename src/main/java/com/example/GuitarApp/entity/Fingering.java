@@ -20,7 +20,7 @@ public class Fingering implements AbstractEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String imgPath;
 
     @ManyToOne(fetch = FetchType.EAGER)

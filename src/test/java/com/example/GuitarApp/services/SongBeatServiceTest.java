@@ -96,6 +96,7 @@ class SongBeatServiceTest {
         void shouldUpdateSongBeatFields() {
             SongBeat updated = new SongBeat();
             updated.setText("Updated text");
+            updated.setBeatChords(songBeat.getBeatChords());
 
             given(songBeatRepository.findById(1)).willReturn(Optional.of(songBeat));
 

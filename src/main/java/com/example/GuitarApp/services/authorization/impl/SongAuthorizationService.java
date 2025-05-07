@@ -29,7 +29,7 @@ public class SongAuthorizationService implements AuthorizationService {
 
         if(song.getCreatedBy() == null) return false;
 
-        return song.getCreatedBy().getId() == (userDetails.getId());
+        return song.getCreatedBy().getId() == userDetails.getId();
     }
 
     @Override
