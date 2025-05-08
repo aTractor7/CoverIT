@@ -19,6 +19,4 @@ public class CommentDto {
     private SongTutorialShortDto songTutorial;
 
     private int  idAnswerOn;
-
-    private List<CommentDto> comments;
 }

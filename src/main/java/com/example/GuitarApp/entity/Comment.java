@@ -30,13 +30,10 @@ public class Comment implements AbstractEntity{
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REMOVE})
     @JoinColumn(name = "answer_on", referencedColumnName = "id")
     private Comment answerOn;
-
-    @OneToMany(mappedBy = "answerOn", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.REMOVE})
-    private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_tutorial_id", referencedColumnName = "id", nullable = false)
@@ -59,11 +56,11 @@ public class Comment implements AbstractEntity{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return id == comment.id && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(comments, comment.comments) && Objects.equals(songTutorial, comment.songTutorial) && Objects.equals(author, comment.author);
+        return id == comment.id && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(songTutorial, comment.songTutorial) && Objects.equals(author, comment.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, createdAt, comments, songTutorial, author);
+        return Objects.hash(id, text, createdAt, songTutorial, author);
     }
 }

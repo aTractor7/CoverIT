@@ -60,18 +60,9 @@ public class SongTutorialService implements CrudService<SongTutorial>{
 
     @Override
     public SongTutorial findOne(int id) {
-        SongTutorial tutorial = songTutorialRepository.findById(id)
+        return songTutorialRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        errMsg.getErrorMessage("songTutorial.notfound.byId", id)
-                ));
-
-        if(tutorial.getComments() != null)
-            tutorial.setComments(
-                    tutorial.getComments().stream()
-                        .filter(c -> c.getAnswerOn() == null)
-                        .collect(Collectors.toSet())
-            );
-        return tutorial;
+                        errMsg.getErrorMessage("songTutorial.notfound.byId", id)));
     }
 
     @Override
