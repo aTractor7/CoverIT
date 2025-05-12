@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,36 +17,35 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class Comment implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Comment text cannot be empty")
-    @Size(max = 1000, message = "Comment text cannot exceed 1000 characters")
     @Column(nullable = false, length = 1000)
     private String text;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REMOVE})
     @JoinColumn(name = "answer_on", referencedColumnName = "id")
     private Comment answerOn;
-
-    @OneToMany(mappedBy = "answerOn", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Comment> comments;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_tutorial_id", referencedColumnName = "id", nullable = false)
     private SongTutorial songTutorial;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",  referencedColumnName = "id", nullable = false)
-    private User user;
+    private User author;
+
+    public Comment(int id) {
+        this.id = id;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -56,11 +56,11 @@ public class Comment {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return id == comment.id && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(comments, comment.comments) && Objects.equals(songTutorial, comment.songTutorial) && Objects.equals(user, comment.user);
+        return id == comment.id && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(songTutorial, comment.songTutorial) && Objects.equals(author, comment.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, createdAt, comments, songTutorial, user);
+        return Objects.hash(id, text, createdAt, songTutorial, author);
     }
 }

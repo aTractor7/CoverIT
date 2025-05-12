@@ -23,4 +23,13 @@ public record UserDetailsImpl(User user) implements UserDetails {
     public String getUsername() {
         return this.user.getUsername();
     }
+
+    public int getId() {
+        return user.getId();
+    }
+
+    public boolean isAdmin() {
+        return this.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+    }
 }

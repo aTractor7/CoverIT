@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,28 +19,28 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Artist {
+public class Artist implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Name cannot be empty")
-    @Size(max = 50, message = "Name cannot be longer than 50 characters")
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Size(max = 500, message = "Bio cannot be longer than 500 characters")
     @Column(length = 500)
     private String bio;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "songs_authors",
-            joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
-    )
-    private Set<Song> songs;
+    @ManyToOne
+    @JoinColumn(name = "created_by_user")
+    private User createdBy;
+
+    @ManyToMany(mappedBy = "songAuthors", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<Song> songs = new HashSet<>();
+
+    public Artist(int id) {
+        this.id = id;
+    }
 
     @Override
     public boolean equals(Object o) {

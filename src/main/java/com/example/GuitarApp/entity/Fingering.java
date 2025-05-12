@@ -14,19 +14,18 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Fingering {
+public class Fingering implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false, length = 200)
+    private String imgPath;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chord_id", referencedColumnName = "id", nullable = false)
     private Chord chord;
-
-    // Тимчасово nullable (TODO: зробити not null пізніше)
-    @Lob
-    private byte[] img;
 
     @OneToMany(mappedBy = "recommendedFingering", fetch = FetchType.LAZY)
     private Set<BeatChord> recommendedFor;
@@ -35,11 +34,11 @@ public class Fingering {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Fingering fingering = (Fingering) o;
-        return id == fingering.id && Objects.equals(chord, fingering.chord) && Objects.deepEquals(img, fingering.img);
+        return id == fingering.id && Objects.equals(chord, fingering.chord) && Objects.equals(imgPath, fingering.imgPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chord, Arrays.hashCode(img));
+        return Objects.hash(id, chord, imgPath);
     }
 }

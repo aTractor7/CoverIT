@@ -9,5 +9,4 @@ class GuitarAppApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

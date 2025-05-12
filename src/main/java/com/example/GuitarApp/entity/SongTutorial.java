@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,18 +19,16 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SongTutorial {
+public class SongTutorial implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull(message = "Difficulty cannot be null")
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private TutorialDifficulty difficulty;
 
-    @Size(max = 100, message = "Description cannot be longer than 100 characters")
     @Column(length = 100)
     private String description;
 
@@ -40,7 +39,6 @@ public class SongTutorial {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Size(max = 20, message = "Recommended strumming cannot be longer than 20 characters")
     @Column(length = 20)
     private String recommendedStrumming;
 
@@ -52,17 +50,19 @@ public class SongTutorial {
     @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     private Song song;
 
-    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "songTutorial", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<PersonalLibrary> personalLibraries;
 
     @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<SongBeat> songBeats;
+
+    public SongTutorial(int id) {
+        this.id = id;
+    }
 
     @PrePersist
     protected void onCreate() {

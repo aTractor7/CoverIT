@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class PersonalLibrary {
+public class PersonalLibrary implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,10 @@ public class PersonalLibrary {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_tutorial_id", referencedColumnName = "id", nullable = false)
     private SongTutorial songTutorial;
+
+    public PersonalLibrary(SongTutorial songTutorial) {
+        this.songTutorial = songTutorial;
+    }
 
     @PrePersist
     protected void onCreate() {

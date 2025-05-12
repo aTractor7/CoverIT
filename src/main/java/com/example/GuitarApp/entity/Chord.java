@@ -13,14 +13,12 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Chord {
+public class Chord implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Chord name must not be empty")
-    @Size(max = 10, message = "Chord name must be at most 10 characters")
     @Column(nullable = false, unique = true, length = 10)
     private String name;
 

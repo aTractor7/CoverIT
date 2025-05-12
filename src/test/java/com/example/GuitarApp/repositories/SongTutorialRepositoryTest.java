@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -89,7 +90,7 @@ class SongTutorialRepositoryTest {
         try {
             songTutorialRepository.save(invalidSongTutorial);
         } catch (Exception e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+            assertThat(e).isInstanceOf(DataIntegrityViolationException.class);
         }
     }
 

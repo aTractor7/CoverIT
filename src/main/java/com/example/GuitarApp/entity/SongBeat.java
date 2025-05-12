@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SongBeat {
+public class SongBeat implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +30,16 @@ public class SongBeat {
     @Column(nullable = false, precision = 4)
     private Integer beat;
 
+    @Column(length = 50)
+    private String comment;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "song_tutorial_id", referencedColumnName = "id", nullable = false)
     private SongTutorial songTutorial;
 
-    @OneToMany(mappedBy = "songBeat",
+    @OneToMany(mappedBy = "songBeat", fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private Set<BeatChord> beatChords;
+    private List<BeatChord> beatChords;
 
     @Override
     public boolean equals(Object o) {

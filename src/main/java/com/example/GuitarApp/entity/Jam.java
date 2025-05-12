@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Jam {
+public class Jam implements AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,11 @@ public class Jam {
     @Column(nullable = false, length = 50)
     private SongGenre genre;
 
-    // Тимчасово nullable (TODO: зробити not null пізніше)
     @Lob
-    @Column(name = "audio", columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "LONGBLOB", nullable = false)
     private byte[] audio;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "jam_key", referencedColumnName = "id", nullable = false)
+    @JoinColumn(referencedColumnName = "id", nullable = false)
     private Note jamKey;
 }
