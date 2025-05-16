@@ -35,6 +35,16 @@ public class ChordService implements CrudService<Chord> {
         return chordRepository.findAll(pageable).getContent();
     }
 
+    public List<Chord> findPage(int page, int pageSize, Optional<String> sortField, Optional<String> name) {
+        if(name.isEmpty())
+            return findPage(page, pageSize, sortField);
+        Pageable pageable = sortField
+                .map(field -> PageRequest.of(page, pageSize, Sort.by(field)))
+                .orElseGet(() -> PageRequest.of(page, pageSize));
+
+        return chordRepository.findAllByNameStartingWith(name.get(), pageable).getContent();
+    }
+
     @Override
     public Chord findOne(int id) {
         return chordRepository.findById(id)

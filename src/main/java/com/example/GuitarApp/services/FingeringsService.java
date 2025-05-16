@@ -1,5 +1,6 @@
 package com.example.GuitarApp.services;
 
+import com.example.GuitarApp.entity.Chord;
 import com.example.GuitarApp.entity.Fingering;
 import com.example.GuitarApp.repositories.FingeringRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +36,10 @@ public class FingeringsService implements CrudService<Fingering> {
         return fingeringRepository.findAll(pageable).getContent();
     }
 
+    public List<Fingering> findAllForChord(Chord chord) {
+        return fingeringRepository.findAllByChord(chord);
+    }
+
     @Override
     public Fingering findOne(int id) {
         return fingeringRepository.findById(id)
@@ -57,7 +62,7 @@ public class FingeringsService implements CrudService<Fingering> {
         fingering.setImgPath(updatedEntity.getImgPath());
         fingering.setChord(updatedEntity.getChord());
 
-        return fingering;
+        return fingeringRepository.save(fingering);
     }
 
     @Override

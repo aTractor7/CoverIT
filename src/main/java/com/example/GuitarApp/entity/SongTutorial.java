@@ -58,7 +58,7 @@ public class SongTutorial implements AbstractEntity{
 
     @OneToMany(mappedBy = "songTutorial", fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private Set<SongBeat> songBeats;
+    private List<SongBeat> songBeats;
 
     public SongTutorial(int id) {
         this.id = id;

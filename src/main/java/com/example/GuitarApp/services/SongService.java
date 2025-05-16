@@ -43,6 +43,16 @@ public class SongService implements CrudService<Song>{
         return songRepository.findAll(pageable).getContent();
     }
 
+    public List<Song> findPage(int page, int pageSize, Optional<String> sortField, Optional<String> title) {
+        if (title.isEmpty())
+            return findPage(page, pageSize, sortField);
+        Pageable pageable = sortField
+                .map(field -> PageRequest.of(page, pageSize, Sort.by(field)))
+                .orElseGet(() -> PageRequest.of(page, pageSize));
+
+        return songRepository.findAllByTitleContainingIgnoreCase(title.get(), pageable).getContent();
+    }
+
     @Override
     public Song findOne(int id) {
         return songRepository.findById(id)

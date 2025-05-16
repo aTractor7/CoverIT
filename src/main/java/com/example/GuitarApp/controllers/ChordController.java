@@ -42,9 +42,10 @@ public class ChordController {
     public ResponseEntity<List<ChordDto>> getAllPageable(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Optional<String> sortField) {
+            @RequestParam(required = false) Optional<String> sortField,
+            @RequestParam(required = false) Optional<String> name) {
 
-        List<ChordDto> chords = chordService.findPage(page, size, sortField)
+        List<ChordDto> chords = chordService.findPage(page, size, sortField, name)
                 .stream()
                 .map(this::convertToChordDto)
                 .toList();

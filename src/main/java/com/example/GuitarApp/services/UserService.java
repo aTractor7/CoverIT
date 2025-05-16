@@ -55,6 +55,17 @@ public class UserService implements CrudService<User>{
         return userRepository.findAll(pageable).getContent();
     }
 
+    public List<User> findPage(int page, int pageSize, Optional<String> sortField, Optional<String> username) {
+        if(username.isEmpty())
+            return findPage(page, pageSize, sortField);
+
+        Pageable pageable = sortField
+                .map(field -> PageRequest.of(page, pageSize, Sort.by(field)))
+                .orElseGet(() -> PageRequest.of(page, pageSize));
+
+        return userRepository.findAllByUsernameContainingIgnoreCase(username.get(), pageable).getContent();
+    }
+
     @Override
     public User findOne(int id) {
         return userRepository.findById(id)
@@ -105,6 +116,15 @@ public class UserService implements CrudService<User>{
         if(usernameChanged) {
             userDetailsService.changeUsernameInSecurityContext(updatedUser.getUsername());
         }
+
+        return user;
+    }
+
+    @Transactional
+    public User updateRole(int id, User updatedUser) {
+        User user = findOne(id);
+
+        user.setRole(updatedUser.getRole());
 
         return user;
     }

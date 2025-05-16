@@ -42,9 +42,9 @@ public class CommentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Optional<String> sortField,
-            @RequestParam(required = false) Optional<Integer> songTitle) {
+            @RequestParam(required = false) Optional<Integer> tutorialId) {
 
-        List<CommentDto> songTutorials = commentService.findPage(page, size, sortField, songTitle)
+        List<CommentDto> songTutorials = commentService.findPage(page, size, sortField, tutorialId)
                 .stream()
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());

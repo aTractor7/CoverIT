@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,5 +24,5 @@ public class ChordDto {
     @Size(max = 10, message = "Chord name must be at most 10 characters")
     private String name;
 
-    private Set<FingeringShortDto> fingerings;
+    private List<FingeringShortDto> fingerings;
 }
