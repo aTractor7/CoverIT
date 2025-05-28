@@ -2,6 +2,7 @@ package com.example.GuitarApp.controllers;
 
 import com.example.GuitarApp.entity.Chord;
 import com.example.GuitarApp.entity.dto.ChordDto;
+import com.example.GuitarApp.entity.dto.ChordShortDto;
 import com.example.GuitarApp.entity.dto.ErrorResponse;
 import com.example.GuitarApp.services.ChordService;
 import com.example.GuitarApp.services.ErrorMessageService;
@@ -105,8 +106,11 @@ public class ChordController {
     }
 
     private ChordDto convertToChordDto(Chord chord) {
-
-        return modelMapper.map(chord, ChordDto.class);
+        ChordDto dto = modelMapper.map(chord, ChordDto.class);
+        if(chord.getFingerings() != null && !chord.getFingerings().isEmpty())
+            dto.getFingerings().forEach(fingering -> fingering.setChordShort(
+                    new ChordShortDto(chord.getId(), chord.getName())));
+        return dto;
     }
 
     private Chord convertToChord(ChordDto chordDto) {

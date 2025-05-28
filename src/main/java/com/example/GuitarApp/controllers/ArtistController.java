@@ -40,9 +40,10 @@ public class ArtistController {
     public ResponseEntity<List<ArtistDto>> getAllPageable(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Optional<String> sortField) {
+            @RequestParam(required = false) Optional<String> sortField,
+            @RequestParam(required = false) Optional<String> name) {
 
-        List<ArtistDto> artists = artistService.findPage(page, size, sortField)
+        List<ArtistDto> artists = artistService.findPage(page, size, sortField, name)
                 .stream()
                 .map(this::convertToArtistDto)
                 .collect(Collectors.toList());

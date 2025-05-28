@@ -13,7 +13,10 @@ import java.util.Set;
 @Repository
 public interface ChordRepository extends JpaRepository<Chord, Integer> {
 
-    Page<Chord> findAllByNameStartingWith(String name, Pageable pageable);
+    Page<Chord> findAllByNameStartingWithAndNameNotContainingAndNameNotContaining(
+            String nameStart, String exclude1, String exclude2, Pageable pageable);
+    Page<Chord> findAllByNameStartingWith(String nameStart, Pageable pageable);
+
 
     Optional<Chord> findByName(String name);
 

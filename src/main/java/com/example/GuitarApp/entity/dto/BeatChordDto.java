@@ -13,5 +13,5 @@ public class BeatChordDto {
     @NotBlank(message = "You should set a chord")
     private ChordDto chord;
 
-    private FingeringDto recommendedFingering;
+    private FingeringShortDto recommendedFingering;
 }
