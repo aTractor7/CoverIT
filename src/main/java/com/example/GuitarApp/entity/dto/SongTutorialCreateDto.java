@@ -28,5 +28,5 @@ public class SongTutorialCreateDto {
 
     @NotNull
     @Valid
-    private Set<SongBeatCreationDto> beats;
+    private List<SongBeatCreationDto> beats;
 }

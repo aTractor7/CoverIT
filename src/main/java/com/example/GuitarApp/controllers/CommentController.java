@@ -41,10 +41,10 @@ public class CommentController {
     public ResponseEntity<List<CommentDto>> getAllPageable(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Optional<String> sortField,
-            @RequestParam(required = false) Optional<Integer> songTitle) {
+            @RequestParam(required = false, defaultValue = "comments") Optional<String> sortField,
+            @RequestParam(required = false) Optional<Integer> tutorialId) {
 
-        List<CommentDto> songTutorials = commentService.findPage(page, size, sortField, songTitle)
+        List<CommentDto> songTutorials = commentService.findPage(page, size, sortField, tutorialId)
                 .stream()
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());

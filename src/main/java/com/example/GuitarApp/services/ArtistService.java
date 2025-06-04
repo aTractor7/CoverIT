@@ -38,6 +38,16 @@ public class ArtistService implements CrudService<Artist> {
         return artistRepository.findAll(pageable).getContent();
     }
 
+    public List<Artist> findPage(int page, int pageSize, Optional<String> sortField, Optional<String> name) {
+        if(name.isEmpty())
+            return findPage(page, pageSize, sortField);
+        Pageable pageable = sortField
+                .map(field -> PageRequest.of(page, pageSize, Sort.by(field)))
+                .orElseGet(() -> PageRequest.of(page, pageSize));
+
+        return artistRepository.findAllByNameContainingIgnoreCase(name.get(), pageable).getContent();
+    }
+
     @Override
     public Artist findOne(int id) {
         return artistRepository.findById(id)

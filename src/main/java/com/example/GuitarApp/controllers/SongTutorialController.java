@@ -140,7 +140,6 @@ public class SongTutorialController {
         }
     }
 
-    //TODO: якщо в chord beat recommendedFingering.getChord.getId() співпадає з chord.getId() виникає помилка
     private SongTutorialDto convertToSongTutorialDto(SongTutorial songTutorial) {
         Set<Comment> commentSet = songTutorial.getComments();
         songTutorial.setComments(null);
@@ -153,6 +152,20 @@ public class SongTutorialController {
                             .map(c -> modelMapper.map(c, CommentDto.class))
                             .collect(Collectors.toSet())
             );
+
+        List<BeatChordDto> beatChordDtos = songTutorialDto.getBeats().stream()
+                .flatMap(songBeat -> songBeat.getBeatChords().stream())
+                .toList();
+
+        for(BeatChordDto beatChordDto : beatChordDtos) {
+            ChordShortDto chordShortDto = new ChordShortDto(beatChordDto.getChord().getId(), beatChordDto.getChord().getName());
+            if(beatChordDto.getRecommendedFingering() != null)
+                beatChordDto.getRecommendedFingering().setChordShort(chordShortDto);
+
+            if(beatChordDto.getChord().getFingerings() != null && !beatChordDto.getChord().getFingerings().isEmpty())
+                beatChordDto.getChord().getFingerings()
+                        .forEach(fingering -> fingering.setChordShort(chordShortDto));
+        }
         return songTutorialDto;
     }
 

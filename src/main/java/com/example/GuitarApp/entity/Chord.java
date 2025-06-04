@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,10 +25,14 @@ public class Chord implements AbstractEntity{
 
     @OneToMany(mappedBy = "chord", fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Fingering> fingerings;
+    private List<Fingering> fingerings;
 
     @OneToMany(mappedBy = "chord", fetch = FetchType.LAZY)
     private Set<BeatChord> beatChords;
+
+    public Chord(int id) {
+        this.id = id;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,6 +1,7 @@
 package com.example.GuitarApp.config;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,6 +10,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
+@EnableConfigurationProperties({
+        FileStorageProperties.class
+})
 public class ApplicationConfig {
     @Bean
     public ModelMapper modelMapper(){

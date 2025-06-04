@@ -43,9 +43,10 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUsersPageable(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Optional<String> sortField) {
+            @RequestParam(required = false) Optional<String> sortField,
+            @RequestParam(required = false) Optional<String> username) {
 
-        List<UserDto> users = userService.findPage(page, size, sortField)
+        List<UserDto> users = userService.findPage(page, size, sortField, username)
                 .stream()
                 .map(this::convertToUserDto)
                 .collect(Collectors.toList());
@@ -74,6 +75,19 @@ public class UserController {
         }
 
         User updatedUser = userService.update(id, convertToUser(userDTO));
+        return ResponseEntity.ok(convertToUserDto(updatedUser));
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDto> updateRole(@PathVariable int id,
+                                          @RequestBody @Valid UserDto userDTO,
+                                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException(generateFieldErrorMessage(bindingResult.getFieldErrors()));
+        }
+
+        User updatedUser = userService.updateRole(id, convertToUser(userDTO));
         return ResponseEntity.ok(convertToUserDto(updatedUser));
     }
 

@@ -126,7 +126,7 @@ class SongTutorialServiceTest {
             updated.setSong(song);
             updated.setSongBeats(tutorial.getSongBeats());
 
-            Set<SongBeat> beats = Set.of(new SongBeat());
+            List<SongBeat> beats = List.of(new SongBeat());
             updated.setSongBeats(beats);
 
             given(tutorialRepository.findById(1)).willReturn(Optional.of(tutorial));

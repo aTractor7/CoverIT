@@ -23,6 +23,14 @@ public class Fingering implements AbstractEntity{
     @Column(nullable = false, length = 200)
     private String imgPath;
 
+    @Transient
+    public String getFileName() {
+        if (imgPath == null || imgPath.isEmpty()) {
+            return null;
+        }
+        return imgPath.substring(imgPath.lastIndexOf('/') + 1);
+    }
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chord_id", referencedColumnName = "id", nullable = false)
     private Chord chord;

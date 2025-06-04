@@ -66,7 +66,7 @@ public class SongTutorialControllerTest {
         testTutorial.setSong(TestDataFactory.getSongWithAuthor());
 
         SongBeat songBeat = TestDataFactory.getSongBeat();
-        testTutorial.setSongBeats(Set.of(songBeat));
+        testTutorial.setSongBeats(List.of(songBeat));
 
         BeatChord beatChord = songBeat.getBeatChords().get(0);
 
@@ -82,14 +82,14 @@ public class SongTutorialControllerTest {
         testTutorialDto.setId(1);
         testTutorialDto.setSong(songShortDto);
         testTutorialDto.setDifficulty(testTutorial.getDifficulty());
-        testTutorialDto.setBeats(Set.of(songBeatDto));
+        testTutorialDto.setBeats(List.of(songBeatDto));
 
         testCreateDto = new SongTutorialCreateDto();
         testCreateDto.setSong(songShortDto);
         testCreateDto.setDifficulty(testTutorial.getDifficulty());
 
         SongBeatCreationDto songBeatCreationDto = TestDataFactory.getSongBeatCreationDto(songBeat, beatChord);
-        testCreateDto.setBeats(Set.of(songBeatCreationDto));
+        testCreateDto.setBeats(List.of(songBeatCreationDto));
 
         testShortDto = new SongTutorialShortDto();
         testShortDto.setId(1);

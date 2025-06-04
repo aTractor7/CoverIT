@@ -10,4 +10,6 @@ public class FingeringShortDto {
 
     @NotBlank(message = "You should set img path.")
     private String imgPath;
+
+    private ChordShortDto chordShort;
 }

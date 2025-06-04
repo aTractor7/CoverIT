@@ -4,9 +4,13 @@ import com.example.GuitarApp.repositories.ChordRepository;
 import com.example.GuitarApp.util.validators.annotation.UniqueField;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @UniqueField(
         repository = ChordRepository.class,
         fieldName = "name",
