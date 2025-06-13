@@ -32,4 +32,9 @@ public record UserDetailsImpl(User user) implements UserDetails {
         return this.getAuthorities().stream()
                 .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
     }
+
+    public boolean hasRole(String role) {
+        return this.getAuthorities().stream()
+                .anyMatch(granted -> granted.getAuthority().equals("ROLE_" + role));
+    }
 }
